@@ -234,10 +234,11 @@ a{color:inherit;text-decoration:none}
   font-variant-numeric:tabular-nums;
 }
 .hero h1 em + br{display:none}
-.hero h1 em .sep{
+.hero h1 em{--sep:var(--hb)}
+.sep{
   display:inline-block;width:.12em;height:.12em;margin:0 .07em 0 .03em;vertical-align:baseline;
   overflow:hidden;text-indent:1em;white-space:nowrap;color:transparent;text-shadow:none;
-  background:var(--hb);box-shadow:0 0 10px var(--hb);border-radius:1px;
+  background:var(--sep,#fff);box-shadow:0 0 10px var(--sep,#fff);border-radius:1px;
 }
 .hero-sub{margin:0;max-width:46ch;color:var(--niebla);font-size:clamp(15px,1.5vw,18px)}
 .hero-cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
@@ -255,43 +256,106 @@ a{color:inherit;text-decoration:none}
   transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;
   background:radial-gradient(closest-side, color-mix(in srgb, var(--ha) 38%, transparent), transparent 72%);
 }
-.device{position:relative;width:clamp(108px,12.5vw,156px);aspect-ratio:1/2.3;cursor:pointer;-webkit-tap-highlight-color:transparent;animation:flotar 6s ease-in-out infinite}
+/* Dispositivo: modelo 3D (three.js). Mientras carga, o si el navegador no tiene 3D,
+   se ve el dibujo en CSS de abajo, con las mismas proporciones. */
+.device{position:relative;width:clamp(116px,14.2vw,196px);aspect-ratio:1/2.3;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:pan-y;user-select:none;-webkit-user-select:none;animation:flotar 6s ease-in-out infinite}
+.device-3d{position:absolute;left:50%;top:50%;width:200%;height:125%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;transition:opacity .9s ease}
+.device > span{transition:opacity .7s ease}
+.device.is-3d{animation:none;cursor:grab}
+.device.is-3d.agarrado{cursor:grabbing}
+.device.is-3d .device-3d{opacity:1}
+.device.is-3d > span{opacity:0}
 .device-tip{
-  position:absolute;left:50%;top:0;width:46%;height:14%;transform:translateX(-50%);
-  border-radius:44% 44% 16% 16%/70% 70% 22% 22%;
-  background:linear-gradient(180deg,#30264A,#120A22);box-shadow:inset 0 2px 0 rgba(255,255,255,.14);
+  position:absolute;left:50%;top:4%;width:48%;height:16.5%;transform:translateX(-50%);
+  border-radius:26% 26% 12% 12%/34% 34% 10% 10%;
+  background:linear-gradient(180deg, color-mix(in srgb, var(--ha) 26%, #0b0812), #07050b);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,.12);
 }
+.device-tip::after{content:"";position:absolute;left:-9%;right:-9%;bottom:-10%;height:15%;border-radius:99px;background:linear-gradient(180deg,#f6f4fb,#8e8a9c)}
 .device-body{
-  position:absolute;inset:11% 0 0;border-radius:36%/15%;
+  position:absolute;left:4%;right:4%;top:21.5%;bottom:4%;border-radius:24%/12%;
   background:
-    radial-gradient(110% 55% at 22% 8%, rgba(255,255,255,.5), transparent 46%),
-    linear-gradient(168deg, var(--hb) 0%, var(--ha) 58%, color-mix(in srgb, var(--ha) 45%, var(--noche)) 100%);
+    radial-gradient(110% 55% at 22% 8%, rgba(255,255,255,.45), transparent 46%),
+    linear-gradient(180deg, var(--hb) 0%, var(--ha) 58%, color-mix(in srgb, var(--ha) 45%, var(--noche)) 100%);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.22), inset -12px -24px 40px rgba(0,0,0,.28), 0 30px 60px -20px color-mix(in srgb, var(--ha) 80%, transparent);
 }
 .device-screen{
-  position:absolute;left:17%;right:17%;top:15%;height:19%;border-radius:14px;
-  background:var(--pantalla);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;
+  position:absolute;left:19%;right:19%;top:13.5%;height:40%;border-radius:12px;
+  background:var(--pantalla);box-shadow:0 0 0 3px #05030a, inset 0 0 0 1px rgba(255,255,255,.1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;
 }
-.device-led{font-family:var(--f-led);font-weight:900;font-size:clamp(17px,2vw,24px);line-height:1;color:var(--hb);text-shadow:0 0 10px var(--hb)}
-.device-gauge{width:62%;height:5px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
+.device-led{font-family:var(--f-led);font-weight:900;font-size:clamp(20px,2.3vw,30px);line-height:1;color:#fff;text-shadow:0 0 10px var(--hb), 0 0 22px var(--hb)}
+.device-gauge{width:66%;height:5px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}
 .device-gauge i{display:block;width:78%;height:100%;background:var(--hb);box-shadow:0 0 8px var(--hb)}
-.device-shine{position:absolute;left:11%;top:6%;width:13%;height:72%;border-radius:99px;background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0));opacity:.55}
+.device-shine{position:absolute;left:9%;top:5%;width:10%;height:78%;border-radius:99px;background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0));opacity:.5}
+.giro-hint{
+  position:absolute;left:50%;bottom:-14px;z-index:2;display:flex;align-items:center;gap:7px;white-space:nowrap;
+  margin:0;padding:6px 12px 6px 9px;border-radius:99px;transform:translate(-50%,6px);opacity:0;pointer-events:none;
+  background:rgba(18,8,38,.78);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-size:12.5px;font-weight:700;color:var(--humo);
+  transition:opacity .5s ease, transform .5s ease;
+}
+.giro-hint svg{flex:none;color:var(--hb)}
+.giro-hint.on{opacity:1;transform:translate(-50%,0)}
 
+.now-row{display:flex;align-items:center;gap:8px;width:min(430px,100%)}
+.now-nav{
+  flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--humo);
+  background:rgba(18,8,38,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);transition:box-shadow .2s ease, transform .15s ease;
+}
+.now-nav:hover{box-shadow:inset 0 0 0 1.5px var(--hb)}
+.now-nav:active{transform:scale(.92)}
 .now{
-  display:flex;align-items:center;gap:12px;width:min(320px,100%);
-  padding:10px 10px 10px 14px;border-radius:18px;text-align:left;
+  position:relative;overflow:hidden;flex:1;min-width:0;
+  display:flex;align-items:center;gap:12px;
+  padding:9px 10px 9px 9px;border-radius:18px;text-align:left;
   background:rgba(18,8,38,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);transition:box-shadow .2s ease;
 }
 .now:hover{box-shadow:inset 0 0 0 1px var(--hb)}
-.now-dot{flex:none;width:12px;height:12px;border-radius:50%;background:var(--hb);box-shadow:0 0 12px var(--hb)}
+.now-pic{
+  flex:none;width:44px;height:44px;border-radius:12px;overflow:hidden;
+  background:color-mix(in srgb, var(--hb) 26%, #fff);box-shadow:0 0 18px -4px var(--hb);
+  transition:background-color 1.2s ease;
+}
+.now-pic img{width:100%;height:100%;object-fit:contain;padding:3px;mix-blend-mode:multiply}
+.now-pic.img-broken{background:radial-gradient(circle, var(--hb) 0 28%, transparent 30%), rgba(255,255,255,.06)}
+.now-pic.img-broken img{display:none}
 .now-txt{flex:1;min-width:0;display:flex;flex-direction:column}
-.now-cat{font-size:12px;line-height:1.3;color:var(--niebla)}
+.now-meta{display:flex;min-width:0;font-size:12px;line-height:1.3;color:var(--niebla);white-space:nowrap}
+.now-cat{overflow:hidden;text-overflow:ellipsis}
+.now-price{flex:none;color:var(--humo);font-weight:700}
+.now-price:not(:empty)::before{content:"·";margin:0 6px;color:var(--tenue);font-weight:400}
 .now-txt strong{font-family:var(--f-display);font-weight:700;font-size:15px;line-height:1.3;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .now-go{flex:none;padding:7px 14px;border-radius:99px;background:var(--humo);color:var(--noche);font-size:13px;font-weight:800}
-.now.swap .now-txt,.now.swap .now-dot{animation:swap .55s cubic-bezier(.2,.8,.2,1)}
+.now-bar{position:absolute;left:14px;right:14px;bottom:0;height:2px;border-radius:2px;overflow:hidden;background:rgba(255,255,255,.07)}
+.now-bar i{display:block;width:100%;height:100%;transform-origin:left center;transform:scaleX(0);background:var(--hb);box-shadow:0 0 8px var(--hb)}
+.now.swap .now-txt,.now.swap .now-pic{animation:swap .55s cubic-bezier(.2,.8,.2,1)}
 @keyframes swap{from{opacity:0;transform:translateY(5px)}}
+
+/* Cinta de sabores entre el hero y el banner */
+.cinta-wrap{overflow:hidden;padding:clamp(26px,3.4vw,40px) 0}
+.cinta-wrap + .banner-sec{padding-top:clamp(4px,1.4vw,16px)}
+.cinta{
+  position:relative;width:106%;margin-left:-3%;transform:rotate(-2deg);
+  overflow:hidden;background:var(--tope);
+  box-shadow:0 1px 0 rgba(255,255,255,.09), 0 -1px 0 rgba(255,255,255,.09), 0 18px 34px -22px rgba(0,0,0,.85);
+}
+.cinta-track{display:flex;width:max-content;animation:cinta var(--dur,60s) linear infinite}
+.cinta:hover .cinta-track{animation-play-state:paused}
+.cinta-list{display:flex;align-items:center;flex:none;margin:0;padding:13px 0;list-style:none}
+.cinta-list li{
+  display:flex;align-items:center;gap:22px;padding-right:22px;white-space:nowrap;
+  font-family:var(--f-display);font-weight:800;font-size:clamp(14px,1.5vw,19px);letter-spacing:.02em;text-transform:uppercase;
+  color:var(--c);text-shadow:0 0 18px color-mix(in srgb, var(--c) 55%, transparent);
+}
+.cinta-list li::after{content:"✦";font-size:.8em;color:rgba(255,255,255,.35);text-shadow:none}
+@keyframes cinta{to{transform:translateX(-50%)}}
+
+/* Aparición suave al bajar (la clase la pone el script; sin script se ve todo) */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1)}
+.rv.rv-on{opacity:1;transform:none}
 
 .hero-foot{position:relative;z-index:1;max-width:var(--maxw);margin:clamp(28px,4vw,52px) auto 0;padding-left:var(--gut-l);padding-right:var(--gut-r)}
 .info-bar{list-style:none;margin:0;padding:18px 0;display:flex;flex-wrap:wrap;gap:10px 30px;border-top:1px solid var(--linea);font-size:14.5px;font-weight:600}
@@ -300,7 +364,16 @@ a{color:inherit;text-decoration:none}
 
 @media (max-width:860px){
   .hero-in{grid-template-columns:minmax(0,1fr)}
-  .hero-stage{padding-block:6px 0}
+  .hero-stage{padding-block:16px 0}
+  .device{width:clamp(120px,34vw,170px)}
+}
+@media (max-width:420px){
+  .now-row{gap:6px}
+  .now-nav{width:40px;height:40px}
+  .now{gap:10px;padding-right:8px}
+  .now-pic{width:40px;height:40px}
+  .now-go{padding:7px 11px}
+  .now-txt strong{font-size:14px}
 }
 
 /* ============================================================
@@ -409,7 +482,23 @@ main{padding-bottom:clamp(64px,9vw,112px)}
   background:radial-gradient(70% 50% at 50% 45%, color-mix(in srgb, var(--b) 28%, transparent), transparent 70%);
 }
 .phone.sin-video .phone-art{display:grid}
+.phone.sin-video .video-btn{display:none}
 .phone-art .pod{width:30%;transform:rotate(-10deg)}
+.watch-copy{display:flex;flex-direction:column;align-items:flex-start;gap:16px;min-width:0}
+.watch-hint{margin:0;max-width:34ch;color:var(--niebla)}
+.video-player{cursor:pointer}
+.video-btn{
+  position:absolute;z-index:4;display:grid;place-items:center;border-radius:50%;color:#fff;
+  background:rgba(10,4,22,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);transition:transform .15s ease, background-color .15s ease;
+}
+.video-btn:hover{background:rgba(10,4,22,.82)}
+.video-sound{right:22px;bottom:22px;width:46px;height:46px}
+.video-sound .ico-on{display:none}
+.video-sound.on .ico-on{display:block}
+.video-sound.on .ico-off{display:none}
+.video-play{left:50%;top:50%;width:78px;height:78px;transform:translate(-50%,-50%);background:var(--chicle);color:var(--noche);box-shadow:0 18px 40px -12px rgba(255,61,141,.85)}
+.video-play:hover{transform:translate(-50%,-50%) scale(1.05);background:var(--chicle)}
 @media (max-width:760px){
   .watch{grid-template-columns:minmax(0,1fr)}
   .phone{justify-self:center}
@@ -433,7 +522,10 @@ main{padding-bottom:clamp(64px,9vw,112px)}
 .feat-head .sec-lead{margin:0}
 .sticker{display:inline-block;padding:6px 12px;border-radius:10px;background:var(--menta);color:var(--noche);font-weight:800;font-size:13px;transform:rotate(-3deg)}
 .feat{display:grid;grid-template-columns:repeat(3,minmax(0,168px));gap:14px}
-.feat .card-media{aspect-ratio:1;margin-bottom:10px}
+.feat .card-top{margin-bottom:10px}
+.feat .puff{display:none}
+.feat .card-add{width:32px;height:32px;right:7px;bottom:7px}
+.feat .card-add svg{width:16px;height:16px}
 .feat .card-cat{font-size:11px;gap:6px}
 .feat .card-cat::before{width:7px;height:7px}
 .feat .card-name{font-size:13px;margin:3px 0 4px}
@@ -461,15 +553,98 @@ main{padding-bottom:clamp(64px,9vw,112px)}
 }
 .pill:hover{color:var(--humo);box-shadow:inset 0 0 0 1.5px var(--niebla)}
 .pill.on{background:var(--humo);color:var(--noche);box-shadow:none}
+.buscar{position:relative;display:block;width:min(340px,100%)}
+.buscar input{
+  width:100%;min-height:48px;padding:0 16px 0 46px;border:0;border-radius:99px;
+  background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1.5px var(--borde);
+  color:var(--humo);font:inherit;font-size:15px;font-weight:600;transition:box-shadow .15s ease;
+}
+.buscar input::placeholder{color:var(--tenue);font-weight:500}
+.buscar input:focus{outline:none;box-shadow:inset 0 0 0 1.5px var(--menta)}
+.buscar svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);color:var(--niebla);pointer-events:none}
+.res{margin:0 0 18px;font-size:13px;font-weight:600;color:var(--tenue)}
+
+/* ---------- Lo nuevo (la categoría con más productos nuevos) ---------- */
+.nuevo{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:grid;grid-template-columns:minmax(0,320px) minmax(0,1fr);align-items:center;gap:28px 40px;
+  padding:clamp(24px,4vw,44px);border-radius:32px;
+  background:
+    radial-gradient(90% 120% at 0% 0%, rgba(122,58,240,.55), transparent 60%),
+    radial-gradient(80% 110% at 100% 100%, rgba(224,25,125,.45), transparent 60%),
+    #1A0B33;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
+}
+.nuevo-txt{display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-width:0}
+.nuevo-txt .h-sec{font-size:clamp(28px,3.6vw,44px)}
+.nuevo-led{
+  display:flex;align-items:baseline;gap:10px;margin:0;--sep:#fff;
+  font-family:var(--f-led);font-weight:900;font-size:clamp(52px,6vw,80px);line-height:.9;color:#fff;
+  text-shadow:0 0 18px rgba(255,140,220,.8), 0 0 50px rgba(160,80,255,.6);
+}
+.nuevo-led small{font-family:var(--f-body);font-size:15px;font-weight:700;text-shadow:none;color:rgba(255,255,255,.85)}
+.nuevo-sub{margin:0;color:rgba(255,255,255,.82)}
+.nuevo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 16px;padding:6px 4px 4px}
+@media (max-width:860px){
+  .nuevo{grid-template-columns:minmax(0,1fr)}
+  .nuevo-grid{
+    grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:62%;
+    overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:10px;
+    margin-inline:calc(-1 * clamp(24px,4vw,44px));padding-inline:clamp(24px,4vw,44px);scroll-padding-inline:clamp(24px,4vw,44px);
+  }
+  .nuevo-grid::-webkit-scrollbar{display:none}
+  .nuevo-grid .card{scroll-snap-align:start}
+}
+
+/* ---------- Cómo comprar ---------- */
+.pasos{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.paso{display:flex;flex-direction:column;gap:10px;padding:26px 24px;border-radius:var(--r-lg);background:rgba(255,255,255,.03);box-shadow:inset 0 0 0 1px var(--linea)}
+.paso-num{font-family:var(--f-led);font-weight:900;font-size:56px;line-height:.9;color:var(--chicle);text-shadow:0 0 16px rgba(255,61,141,.6)}
+.paso:nth-child(2) .paso-num{color:var(--violeta);text-shadow:0 0 16px rgba(180,108,255,.6)}
+.paso:nth-child(3) .paso-num{color:var(--wa);text-shadow:0 0 16px rgba(37,211,102,.55)}
+.paso h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:-.02em}
+.paso p{margin:0;color:var(--niebla);font-size:15px}
+@media (max-width:760px){.pasos{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- Preguntas frecuentes ---------- */
+.faq{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);align-items:start;gap:28px 56px}
+.faq-head{position:sticky;top:calc(var(--safe-t) + var(--header-h) + 24px);display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-width:0}
+.faq-head .sec-lead{margin:0}
+.faq-list{display:flex;flex-direction:column;min-width:0}
+.faq-item{border-bottom:1px solid var(--linea)}
+.faq-item summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 0;cursor:pointer;list-style:none;font-weight:700;font-size:17px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{
+  content:"+";flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;
+  box-shadow:inset 0 0 0 1.5px var(--borde);font-size:20px;font-weight:500;line-height:1;color:var(--niebla);transition:transform .2s ease;
+}
+.faq-item[open] summary::after{transform:rotate(45deg);color:var(--humo)}
+.faq-item p{margin:0 0 20px;max-width:60ch;color:var(--niebla)}
+@media (max-width:860px){.faq{grid-template-columns:minmax(0,1fr)}.faq-head{position:static}}
 
 /* ---------- Grilla de productos ---------- */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:28px clamp(12px,1.8vw,24px)}
 @media (max-width:520px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 12px}}
-.card{display:flex;flex-direction:column;min-width:0;text-align:left;animation:entrar .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 40ms)}
-.card:focus-visible{outline:none}
-.card:focus-visible .card-media{outline:2.5px solid var(--menta);outline-offset:3px}
+.card{position:relative;display:flex;flex-direction:column;min-width:0;text-align:left;animation:entrar .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 40ms)}
+.grid.quieto .card{animation:none}
+.card-open{position:absolute;inset:-4px;z-index:2;border-radius:calc(var(--r-md) + 4px);cursor:pointer}
+.card-open:focus-visible{outline:2.5px solid var(--menta);outline-offset:2px}
+.card-top{position:relative;margin-bottom:12px}
+.puff{
+  position:absolute;top:10px;right:10px;z-index:1;padding:5px 8px 4px;border-radius:8px;pointer-events:none;
+  background:var(--pantalla);color:var(--b);font-family:var(--f-led);font-weight:900;font-size:13px;line-height:1;letter-spacing:.04em;
+  text-shadow:0 0 8px var(--b);
+}
+.card-add{
+  position:absolute;right:10px;bottom:10px;z-index:3;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;
+  background:var(--noche);color:var(--humo);
+  box-shadow:0 10px 24px -8px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.12);
+  transition:transform .15s ease, background-color .15s ease, color .15s ease;
+}
+.card-add:hover{background:var(--chicle);color:var(--noche);transform:scale(1.06)}
+.card-add:active{transform:scale(.94)}
 .card-media{
-  position:relative;isolation:isolate;display:block;aspect-ratio:1;max-width:100%;margin-bottom:12px;
+  position:relative;isolation:isolate;display:block;aspect-ratio:1;max-width:100%;
   border-radius:var(--r-md);overflow:hidden;
   background:radial-gradient(70% 60% at 50% 42%, rgba(255,255,255,.75), transparent 72%), var(--pastel);
   transition:transform .25s ease, box-shadow .25s ease;
@@ -536,7 +711,21 @@ main{padding-bottom:clamp(64px,9vw,112px)}
 .det h2{margin:8px 0 12px;font-family:var(--f-display);font-weight:800;font-size:clamp(22px,2.6vw,30px);line-height:1.12;letter-spacing:-.03em;text-wrap:balance}
 .det-price{margin-bottom:18px;font-family:var(--f-display);font-weight:800;font-size:clamp(24px,2.8vw,30px);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .det-price s{margin-left:10px;font-family:var(--f-body);font-weight:500;font-size:15px;color:var(--tenue)}
-.det-desc{margin-bottom:22px;color:var(--niebla);font-size:14.5px;line-height:1.65;white-space:pre-line}
+.det-top{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin-bottom:18px}
+.det-top .det-price{margin-bottom:0}
+.det-puffs{padding:6px 10px 5px;border-radius:9px;background:var(--pantalla);font-family:var(--f-led);font-weight:900;font-size:16px;line-height:1;color:var(--b,#fff);text-shadow:0 0 8px var(--b,#fff)}
+.det-puffs:empty{display:none}
+.det-puffs small{margin-left:5px;font-family:var(--f-body);font-size:11px;font-weight:700;text-shadow:none;color:var(--niebla)}
+.det-desc{margin-bottom:22px;color:var(--niebla);font-size:14.5px;line-height:1.65}
+.det-desc p{margin:0 0 14px}
+.det-desc strong{color:var(--humo)}
+.det-list{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.det-list li{display:flex;align-items:flex-start;gap:10px;color:var(--humo);font-weight:600}
+.det-list li::before{
+  content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;
+  background:color-mix(in srgb, var(--b,#fff) 24%, transparent) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'><path d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='%23FFFFFF' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'/></svg>") center/11px no-repeat;
+  box-shadow:inset 0 0 0 1px var(--b,#fff);
+}
 .opt{margin:0 0 18px}
 .opt-lbl{display:block;margin-bottom:9px;font-size:13px;font-weight:700;color:var(--niebla)}
 .opt-row{display:flex;flex-wrap:wrap;gap:8px}
@@ -669,7 +858,28 @@ main{padding-bottom:clamp(64px,9vw,112px)}
 .ft small{font-size:13px;color:var(--tenue)}
 .age{display:flex;align-items:center;gap:10px;margin:0;font-size:13px;color:var(--niebla)}
 .age b{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:50%;box-shadow:inset 0 0 0 1.5px var(--niebla);font-size:11.5px;font-weight:800;color:var(--humo)}
+.ft-col{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ft-col h3{margin:0 0 4px;font-size:13px;font-weight:800;color:var(--humo)}
+.ft-col p{margin:0;font-size:14px;line-height:1.6;color:var(--niebla)}
 .ft-links{display:flex;flex-wrap:wrap;gap:10px 26px;font-size:14.5px;font-weight:700;color:var(--niebla)}
+
+/* ---------- Barra de carrito (celular) ---------- */
+.cartbar{display:none}
+@media (max-width:860px){
+  .cartbar{
+    position:fixed;left:12px;right:12px;bottom:calc(12px + var(--safe-b));z-index:78;
+    display:flex;align-items:center;gap:12px;padding:10px 10px 10px 16px;border-radius:20px;
+    background:rgba(18,8,38,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    box-shadow:0 20px 50px -14px rgba(0,0,0,.8), inset 0 0 0 1px rgba(255,255,255,.12);
+    animation:up .35s cubic-bezier(.2,.9,.3,1);
+  }
+  .cartbar svg{flex:none;color:var(--chicle)}
+  .cartbar-txt{flex:1;min-width:0;margin:0;font-size:14px;line-height:1.3;color:var(--niebla)}
+  .cartbar-txt strong{display:block;color:var(--humo)}
+  .cartbar .btn{min-height:44px;padding:0 18px;font-size:14px}
+  body.con-barra .wa-fab{bottom:calc(88px + var(--safe-b))}
+  body.con-barra .toast{bottom:calc(156px + var(--safe-b))}
+}
 .ft-links a{transition:color .15s ease}
 .ft-links a:hover{color:var(--humo)}
 @media (max-width:640px){
@@ -711,13 +921,14 @@ main{padding-bottom:clamp(64px,9vw,112px)}
 <header class="hdr">
   <div class="hdr-in">
     <a href="#top" class="logo" id="logoTxt">
-      <img src="img/sexo.png" alt="Logo de la marca">
+      <img src="img/logo-vp.webp" alt="Logo de la marca">
       <span>TU<span>MARCA</span></span>
     </a>
     <nav class="nav" id="nav">
       <a href="#catalogo">Catálogo</a>
-      <a href="#destacados">Destacados</a>
+      <a href="#nuevo">Lo nuevo</a>
       <a href="#categorias">Categorías</a>
+      <a href="#preguntas">Preguntas</a>
       <a href="#" id="waLink" target="_blank" rel="noopener">Escribinos</a>
     </nav>
     <button class="icon-btn burger" id="burger" aria-label="Abrir menú" aria-expanded="false">
@@ -755,6 +966,7 @@ main{padding-bottom:clamp(64px,9vw,112px)}
 
       <div class="hero-stage" id="heroStage">
         <div class="device" id="device" aria-hidden="true">
+          <canvas class="device-3d" id="device3d"></canvas>
           <span class="device-tip"></span>
           <span class="device-body">
             <span class="device-screen">
@@ -763,12 +975,25 @@ main{padding-bottom:clamp(64px,9vw,112px)}
             </span>
             <span class="device-shine"></span>
           </span>
+          <p class="giro-hint" id="giroHint" hidden>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+            <span id="giroTxt">Arrastralo para girarlo</span>
+          </p>
         </div>
-        <button type="button" class="now" id="nowFlavor">
-          <span class="now-dot" aria-hidden="true"></span>
-          <span class="now-txt"><span class="now-cat" id="nowCat"></span><strong id="nowName"></strong></span>
-          <span class="now-go" aria-hidden="true">Ver</span>
-        </button>
+        <div class="now-row">
+          <button type="button" class="now-nav" id="nowPrev" aria-label="Sabor anterior">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="now" id="nowFlavor">
+            <span class="now-pic" aria-hidden="true"><img id="nowImg" alt=""></span>
+            <span class="now-txt"><span class="now-meta"><span class="now-cat" id="nowCat"></span><span class="now-price" id="nowPrice"></span></span><strong id="nowName"></strong></span>
+            <span class="now-go" aria-hidden="true">Ver</span>
+            <span class="now-bar" aria-hidden="true"><i id="nowBar"></i></span>
+          </button>
+          <button type="button" class="now-nav" id="nowNext" aria-label="Sabor siguiente">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -781,9 +1006,12 @@ main{padding-bottom:clamp(64px,9vw,112px)}
     </div>
   </section>
 
+  <!-- Cinta de sabores (se arma sola con los sabores del catálogo) -->
+  <div class="cinta-wrap" aria-hidden="true"><div class="cinta"><div class="cinta-track" id="cinta"></div></div></div>
+
   <!-- ============ BANNER ============ -->
   <section class="sec banner-sec" aria-label="VP Vapes">
-    <img src="img/logo.pgn.jpeg" alt="VP Vapes: Lost Mary Ultrasonic y Turbo, hasta 35.000 puffs de sabor" class="banner">
+    <img src="img/banner-vp.webp" alt="VP Vapes: Lost Mary Ultrasonic y Turbo, hasta 35.000 puffs de sabor" class="banner">
   </section>
 
   <!-- ============ CATEGORÍAS ============ -->
@@ -795,15 +1023,39 @@ main{padding-bottom:clamp(64px,9vw,112px)}
     <div class="cats" id="catsGrid"></div>
   </section>
 
+  <!-- ============ LO NUEVO ============ -->
+  <section class="sec" id="nuevo">
+    <div class="nuevo">
+      <div class="nuevo-txt">
+        <span class="sticker">Nuevo</span>
+        <h2 class="h-sec" id="nuevoTitulo"></h2>
+        <p class="nuevo-led"><span id="nuevoLed"></span><small>puffs</small></p>
+        <p class="nuevo-sub" id="nuevoTexto"></p>
+        <a href="#catalogo" class="btn btn-solid" id="nuevoVer">Ver todos</a>
+      </div>
+      <div class="nuevo-grid" id="nuevoGrid"></div>
+    </div>
+  </section>
+
   <!-- ============ EN USO ============ -->
   <section class="sec" id="uso">
     <div class="watch">
-      <h2 class="watch-title">Así se ve</h2>
+      <div class="watch-copy">
+        <h2 class="watch-title">Así se ve</h2>
+        <p class="watch-hint">Se reproduce solo y sin sonido. Tocá el parlante para escucharlo o el video para pausarlo.</p>
+      </div>
       <div class="phone">
-        <video class="video-player" controls playsinline preload="metadata" poster="img/sexo.png">
+        <video class="video-player" id="video" controls muted loop playsinline preload="metadata" poster="img/poster-vp.webp">
           <source src="img/asi-se-ve-en-uso.mp4" type="video/mp4">
           Tu navegador no soporta videos HTML5.
         </video>
+        <button type="button" class="video-btn video-sound" id="videoSound" aria-label="Activar sonido" hidden>
+          <svg class="ico-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="m23 9-6 6M17 9l6 6"/></svg>
+          <svg class="ico-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+        </button>
+        <button type="button" class="video-btn video-play" id="videoPlay" aria-label="Reproducir video" hidden>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>
+        </button>
         <span class="phone-art" aria-hidden="true"><span class="pod"></span></span>
       </div>
     </div>
@@ -830,9 +1082,40 @@ main{padding-bottom:clamp(64px,9vw,112px)}
         <h2 class="h-sec">El catálogo</h2>
         <p class="sec-lead">Elegí tus opciones, sumalo al carrito y coordinamos por WhatsApp.</p>
       </div>
+      <label class="buscar">
+        <span class="sr">Buscar sabor</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" id="buscar" placeholder="Buscá tu sabor" autocomplete="off">
+      </label>
     </div>
     <div class="pills" id="pills" role="group" aria-label="Filtrar por categoría"></div>
+    <p class="res" id="res" aria-live="polite"></p>
     <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- ============ CÓMO COMPRAR ============ -->
+  <section class="sec" id="como">
+    <div class="sec-head"><h2 class="h-sec">Cómo comprar</h2></div>
+    <ol class="pasos">
+      <li class="paso"><span class="paso-num" aria-hidden="true">1</span><h3>Elegí tu sabor</h3><p>Mirá el catálogo y abrí cada producto para ver sus detalles.</p></li>
+      <li class="paso"><span class="paso-num" aria-hidden="true">2</span><h3>Sumalo al carrito</h3><p>Elegí la cantidad o tocá el + de la foto para agregarlo directo.</p></li>
+      <li class="paso"><span class="paso-num" aria-hidden="true">3</span><h3>Finalizá por WhatsApp</h3><p>Se abre el chat con tu pedido listo y coordinamos el envío y el pago.</p></li>
+    </ol>
+  </section>
+
+  <!-- ============ PREGUNTAS ============ -->
+  <section class="sec" id="preguntas">
+    <div class="faq">
+      <div class="faq-head">
+        <h2 class="h-sec">Preguntas frecuentes</h2>
+        <p class="sec-lead">¿Tenés otra duda? Escribinos y te respondemos en minutos.</p>
+        <a href="#" class="btn btn-accent waLink" target="_blank" rel="noopener">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.6 8.6 0 0 1-3.9-.9L3 20l1.1-4.6A8.4 8.4 0 0 1 3 11.5 8.5 8.5 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg>
+          Escribinos por WhatsApp
+        </a>
+      </div>
+      <div class="faq-list" id="faqList"></div>
+    </div>
   </section>
 
 </main>
@@ -843,6 +1126,11 @@ main{padding-bottom:clamp(64px,9vw,112px)}
       <div class="logo" id="logoFt">TU<span>MARCA</span></div>
       <small id="ftLegal">© 2026 Tu Marca — Todos los derechos reservados.</small>
       <p class="age"><b>+18</b>Venta exclusiva a mayores de 18 años.</p>
+    </div>
+    <div class="ft-col">
+      <h3>Atención</h3>
+      <p id="pieHorario"></p>
+      <p id="pieUbicacion"></p>
     </div>
     <nav class="ft-links" aria-label="Pie de página">
       <a href="#catalogo">Catálogo</a>
@@ -871,7 +1159,10 @@ main{padding-bottom:clamp(64px,9vw,112px)}
     <div class="det">
       <p class="det-cat" id="sheetCat"></p>
       <h2 id="sheetName"></h2>
-      <div class="det-price" id="sheetPrice"></div>
+      <div class="det-top">
+        <div class="det-price" id="sheetPrice"></div>
+        <span class="det-puffs" id="sheetPuffs"></span>
+      </div>
       <div class="det-desc" id="sheetDesc"></div>
       <div id="sheetOpts"></div>
       <div class="opt">
@@ -948,6 +1239,12 @@ main{padding-bottom:clamp(64px,9vw,112px)}
   </div>
 </div>
 
+<div class="cartbar" id="cartbar" hidden>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+  <p class="cartbar-txt" id="cartbarTxt"></p>
+  <button type="button" class="btn btn-solid" id="cartbarBtn">Ver carrito</button>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -980,6 +1277,15 @@ const CONFIG = {
     { icono: "chat",      texto: "Atención experta < 5 min" },
     { icono: "ubicacion", texto: "San José de Mayo" },
     { icono: "horario",   texto: ["Lun a Jue: 10:00 - 02:00", "Vie a Dom: 24/7"] }
+  ],
+
+  // Preguntas frecuentes (sección "Preguntas"). p = pregunta, r = respuesta
+  preguntas: [
+    { p: "¿Hacen envíos?", r: "Sí, envío en el día a todo el país. Lo coordinamos por WhatsApp cuando confirmás el pedido." },
+    { p: "¿Cómo pago?", r: "Por transferencia o Mercado Pago." },
+    { p: "¿Los productos son originales?", r: "Sí, trabajamos solo con productos 100% originales." },
+    { p: "¿En qué horario atienden?", r: "De lunes a jueves de 10:00 a 02:00, y de viernes a domingo las 24 horas." },
+    { p: "¿Puedo retirar mi pedido?", r: "Sí, podés retirarlo en San José de Mayo. Elegí esa opción en el carrito." }
   ]
 };
 
@@ -991,13 +1297,13 @@ const CATEGORIAS = [
 {
 slug:"ultrasonic",
 nombre:"Lost Mary Ultrasonic",
-img:"img/blue-razz.png.jfif"
+img:"img/blue-razz.webp"
 },
 
 {
 slug:"turbo",
 nombre:"Lost Mary Turbo",
-img:"img/black-mint.png.jpeg"
+img:"img/black-mint.webp"
 },
 
 {
@@ -1025,7 +1331,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-    "img/blue-razz.png.jfif"
+    "img/blue-razz.webp"
 ],
 
 destacado:true,
@@ -1066,7 +1372,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/white-lab.png.jfif"
+"img/white-lab.webp"
 ],
 
 destacado:false,
@@ -1106,7 +1412,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/ice-mint.png.jfif"
+"img/ice-mint.webp"
 ],
 
 destacado:true,
@@ -1145,7 +1451,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/pink-lemonade.png.png"
+"img/pink-lemonade.webp"
 ],
 
 destacado:false,
@@ -1184,7 +1490,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/watermelon-ice.png.jpg"
+"img/watermelon-ice.webp"
 ],
 
 destacado:true,
@@ -1222,7 +1528,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/juicy-peach-ice.png.jfif"
+"img/juicy-peach-ice.webp"
 ],
 
 destacado:false,
@@ -1260,7 +1566,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/berry-bust.png"
+"img/berry-bust.webp"
 ],
 
 destacado:false,
@@ -1298,7 +1604,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/straw-melon-peach.png"
+"img/straw-melon-peach.webp"
 ],
 
 destacado:false,
@@ -1336,7 +1642,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/black-mint.png.jpeg"
+"img/black-mint.webp"
 ],
 
 destacado:false,
@@ -1374,7 +1680,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/miami-mint.png"
+"img/miami-mint.webp"
 ],
 
 destacado:false,
@@ -1412,7 +1718,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/mexican-mango.png"
+"img/mexican-mango.webp"
 ],
 
 destacado:false,
@@ -1450,7 +1756,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/sour-apple.png"
+"img/sour-apple.webp"
 ],
 
 destacado:false,
@@ -1488,7 +1794,7 @@ precio:1250,
 precioAntes:null,
 
 imagenes:[
-"img/watermelon-+.png"
+"img/watermelon-plus.webp"
 ],
 
 destacado:false,
@@ -1857,10 +2163,11 @@ let actual = null;     // producto abierto en la ficha
 let sel = {};          // opciones elegidas
 let cant = 1;
 let ultimoFoco = null;
+let busqueda = '';     // texto del buscador del catálogo
 
 /* ---------- Marca ---------- */
 function pintarMarca(){
-  const logo = `<img src="img/sexo.png" alt="Logo de la marca"><span class="logo-text">${esc(CONFIG.marca)}<span>${esc(CONFIG.marcaAcento)}</span></span>`;
+  const logo = `<img src="img/logo-vp.webp" alt="Logo de la marca"><span class="logo-text">${esc(CONFIG.marca)}<span>${esc(CONFIG.marcaAcento)}</span></span>`;
   $('#logoTxt').innerHTML = logo;
   $('#logoFt').innerHTML = logo;
   $('#ftLegal').textContent = CONFIG.legal;
@@ -1910,20 +2217,34 @@ function tarjeta(p, i){
   else if (p.nuevo) tag = '<span class="tag new">Nuevo</span>';
   else if (p.precioAntes) tag = '<span class="tag">Oferta</span>';
   const antes = p.precioAntes ? `<s>${plata(p.precioAntes)}</s>` : '';
-  return `<button class="card${p.agotado ? ' is-out' : ''}" data-id="${p.id}" style="${estilo(p)};--i:${Math.min(+i || 0, 10)}" aria-label="${esc(p.nombre)}, ${plata(p.precio)}">
-    <span class="card-media"><img src="${im[0]}" alt="${esc(p.nombre)}" loading="lazy"><span class="art" aria-hidden="true"><span class="pod"></span><span class="art-name">${esc(sabor(p))}</span></span>${alt}${tag}</span>
+  const pf = puffs(p);
+  const mas = p.agotado ? '' : `<button class="card-add" data-add="${p.id}" aria-label="Agregar ${esc(p.nombre)} al carrito"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>`;
+  return `<article class="card${p.agotado ? ' is-out' : ''}" data-id="${p.id}" style="${estilo(p)};--i:${Math.min(+i || 0, 10)}">
+    <button class="card-open" aria-label="Ver ${esc(p.nombre)}, ${plata(p.precio)}"></button>
+    <div class="card-top">
+      <span class="card-media"><img src="${im[0]}" alt="${esc(p.nombre)}" loading="lazy" decoding="async"><span class="art" aria-hidden="true"><span class="pod"></span><span class="art-name">${esc(sabor(p))}</span></span>${alt}${tag}</span>
+      ${pf ? `<span class="puff" aria-hidden="true">${pf}</span>` : ''}
+      ${mas}
+    </div>
     <span class="card-cat">${esc(nomCat(p.categoria))}</span>
     <span class="card-name">${esc(corto(p))}</span>
     <span class="card-price">${plata(p.precio)}${antes}</span>
-  </button>`;
+  </article>`;
 }
 
+const normalizar = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 function pintarGrilla(){
-  const lista = filtro === 'todo' ? PRODUCTOS : PRODUCTOS.filter(p => p.categoria === filtro);
+  const q = normalizar(busqueda.trim());
+  let lista = filtro === 'todo' ? PRODUCTOS : PRODUCTOS.filter(p => p.categoria === filtro);
+  if (q) lista = lista.filter(p => normalizar(`${p.nombre} ${sabor(p)} ${nomCat(p.categoria)}`).includes(q));
   $('#grid').innerHTML = lista.length
     ? lista.map(tarjeta).join('')
-    : `<div class="empty"><strong>No hay productos en esta categoría</strong>
-       Probá con otra o mirá el catálogo completo.</div>`;
+    : (q
+      ? `<div class="empty"><strong>No encontramos “${esc(busqueda.trim())}”</strong>Probá con otro sabor o mirá el catálogo completo.</div>`
+      : `<div class="empty"><strong>No hay productos en esta categoría</strong>
+       Probá con otra o mirá el catálogo completo.</div>`);
+  const r = $('#res');
+  if (r) r.textContent = `${lista.length} ${lista.length === 1 ? 'producto' : 'productos'}`;
   $$('#pills .pill').forEach(b => b.classList.toggle('on', b.dataset.cat === filtro));
 }
 
@@ -1939,6 +2260,62 @@ function pintarPills(){
     usadas.map(c => `<button class="pill" data-cat="${c.slug}">${esc(c.nombre)}</button>`).join('');
 }
 
+/* ---------- Lo nuevo: la categoría con más productos marcados como nuevo ---------- */
+function pintarNuevo(){
+  const sec = $('#nuevo');
+  if (!sec) return;
+  let mejor = null, max = 0;
+  CATEGORIAS.forEach(c => {
+    const n = PRODUCTOS.filter(p => p.categoria === c.slug && p.nuevo && !p.agotado).length;
+    if (n > max){ max = n; mejor = c; }
+  });
+  if (!mejor || max < 2){ sec.hidden = true; return; }
+  const prods = PRODUCTOS.filter(p => p.categoria === mejor.slug && !p.agotado);
+  const pf = puffs(prods[0]);
+  const desde = Math.min(...prods.map(p => p.precio));
+  $('#nuevoTitulo').textContent = mejor.nombre;
+  if (pf) $('#nuevoLed').innerHTML = (parseInt(pf, 10) * 1000).toLocaleString('es-UY').replace(/[.,]/g, m => `<span class="sep">${m}</span>`);
+  else $('#nuevoLed').parentElement.hidden = true;
+  $('#nuevoTexto').textContent = `${prods.length} ${prods.length === 1 ? 'sabor' : 'sabores'}, desde ${plata(desde)}.`;
+  const ver = $('#nuevoVer');
+  ver.dataset.irCat = mejor.slug;
+  ver.href = `?categoria=${mejor.slug}#catalogo`;
+  ver.textContent = `Ver los ${prods.length} sabores`;
+  $('#nuevoGrid').innerHTML = prods.map(tarjeta).join('');
+}
+
+/* ---------- Preguntas frecuentes ---------- */
+function pintarPreguntas(){
+  const box = $('#faqList');
+  if (!box) return;
+  if (!Array.isArray(CONFIG.preguntas) || !CONFIG.preguntas.length){ $('#preguntas').hidden = true; return; }
+  box.innerHTML = CONFIG.preguntas.map((q, i) =>
+    `<details class="faq-item" name="faq"${i ? '' : ' open'}><summary>${esc(q.p)}</summary><p>${esc(q.r)}</p></details>`).join('');
+}
+
+/* ---------- Pie de página: horario y ubicación salen de CONFIG.tope ---------- */
+function pintarPie(){
+  const t = Array.isArray(CONFIG.tope) ? CONFIG.tope : [];
+  const h = t.find(x => x.icono === 'horario'), u = t.find(x => x.icono === 'ubicacion');
+  if ($('#pieHorario')) $('#pieHorario').innerHTML = h ? [].concat(h.texto).map(esc).join('<br>') : '';
+  if ($('#pieUbicacion')) $('#pieUbicacion').textContent = u ? [].concat(u.texto).join(' ') : '';
+}
+
+/* ---------- Descripción de la ficha: líneas con • se muestran como lista ---------- */
+function descHTML(t){
+  const L = String(t || '').trim().split('\n').map(s => s.trim());
+  const texto = [], items = [];
+  for (let i = 0; i < L.length; i++){
+    const l = L[i];
+    if (!l) continue;
+    if (/^[•·]\s*/.test(l)) items.push(l.replace(/^[•·]\s*/, ''));
+    else if (/:$/.test(l) && L[i + 1] && !/^[•·]/.test(L[i + 1])){ texto.push(`<strong>${esc(l)}</strong> ${esc(L[i + 1])}`); i++; }
+    else texto.push(esc(l));
+  }
+  return (texto.length ? `<p>${texto.join('<br>')}</p>` : '') +
+         (items.length ? `<ul class="det-list">${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : '');
+}
+
 /* ---------- Ficha de producto ---------- */
 function abrirFicha(id){
   const p = PRODUCTOS.find(x => x.id === id);
@@ -1951,7 +2328,9 @@ function abrirFicha(id){
   $('#sheetName').textContent = p.nombre;
   $('#sheetPrice').innerHTML = plata(p.precio) +
     (p.precioAntes ? `<s>${plata(p.precioAntes)}</s>` : '');
-  $('#sheetDesc').textContent = (p.descripcion || '').trim();
+  $('#sheetDesc').innerHTML = descHTML(p.descripcion);
+  const pf = puffs(p);
+  $('#sheetPuffs').innerHTML = pf ? `${pf}<small>puffs</small>` : '';
 
   const im = imgs(p);
   $('#galMain').src = im[0];
@@ -1985,16 +2364,30 @@ function cerrarFicha(){
 }
 
 /* ---------- Carrito ---------- */
+function sumarAlCarrito(p, opciones, cantidad){
+  const variante = Object.entries(opciones).map(([k, v]) => `${k}: ${v}`).join(' · ');
+  const key = p.id + '|' + variante;
+  const ya = carrito.find(i => i.key === key);
+  if (ya) ya.cant += cantidad;
+  else carrito.push({ key, id: p.id, nombre: p.nombre, precio: p.precio, img: imgs(p)[0], variante, cant: cantidad });
+  pintarCarrito();
+}
+
 function agregar(){
   if (!actual || actual.agotado) return;
-  const variante = Object.entries(sel).map(([k, v]) => `${k}: ${v}`).join(' · ');
-  const key = actual.id + '|' + variante;
-  const ya = carrito.find(i => i.key === key);
-  if (ya) ya.cant += cant;
-  else carrito.push({ key, id: actual.id, nombre: actual.nombre, precio: actual.precio, img: imgs(actual)[0], variante, cant });
-  pintarCarrito();
+  sumarAlCarrito(actual, sel, cant);
   cerrarFicha();
   avisar(`${actual.nombre} agregado`);
+}
+
+// Botón + de la tarjeta: agrega 1 unidad con la primera opción de cada lista
+function agregarRapido(id){
+  const p = PRODUCTOS.find(x => x.id === id);
+  if (!p || p.agotado) return;
+  const op = {};
+  Object.keys(p.opciones || {}).forEach(k => op[k] = p.opciones[k][0]);
+  sumarAlCarrito(p, op, 1);
+  avisar(`${p.nombre} agregado`);
 }
 
 function pintarCarrito(){
@@ -2057,20 +2450,27 @@ function avisar(msg){
 
 /* ---------- Eventos ---------- */
 document.addEventListener('click', e => {
+  const add = e.target.closest('[data-add]');
+  if (add) return agregarRapido(add.dataset.add);
+
   const card = e.target.closest('.card');
   if (card) return abrirFicha(card.dataset.id);
 
   const pill = e.target.closest('.pill');
   if (pill){
     filtro = pill.dataset.cat;
+    $('#grid').classList.remove('quieto');
     history.replaceState(null, '', filtro === 'todo' ? location.pathname : `?categoria=${filtro}`);
     return pintarGrilla();
   }
 
-  const catCard = e.target.closest('.cat');
+  const catCard = e.target.closest('.cat, [data-ir-cat]');
   if (catCard){
     e.preventDefault();
-    filtro = catCard.dataset.cat;
+    filtro = catCard.dataset.cat || catCard.dataset.irCat;
+    busqueda = '';
+    if ($('#buscar')) $('#buscar').value = '';
+    $('#grid').classList.remove('quieto');
     history.replaceState(null, '', `?categoria=${filtro}`);
     pintarGrilla();
     return $('#catalogo').scrollIntoView({ behavior: 'smooth' });
@@ -2113,6 +2513,11 @@ $('#qMinus').onclick = () => { if (cant > 1){ cant--; $('#qVal').textContent = c
 $('#addBtn').onclick = agregar;
 $('#cartBtn').onclick = abrirCarrito;
 $('#checkout').onclick = checkout;
+$('#buscar').addEventListener('input', e => {
+  busqueda = e.target.value;
+  $('#grid').classList.add('quieto');
+  pintarGrilla();
+});
 
 $('#burger').onclick = () => {
   const n = $('#nav'), abierto = n.classList.toggle('open');
@@ -2134,6 +2539,9 @@ document.addEventListener('keydown', e => {
   pintarEdit();
   pintarPills();
   pintarDestacados();
+  pintarNuevo();
+  pintarPreguntas();
+  pintarPie();
   const q = new URLSearchParams(location.search).get('categoria');
   if (q && CATEGORIAS.some(c => c.slug === q)) filtro = q;
   pintarGrilla();
@@ -2144,6 +2552,8 @@ document.addEventListener('keydown', e => {
    EFECTOS — sólo diseño. Si algo de acá falla, la tienda sigue funcionando igual.
    ============================================================================ */
 const sinMovimiento = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+// Estado compartido del hero: el sabor que se muestra y el vape 3D (cuando termina de cargar)
+const Heroe = { actual: null, d3: null };
 
 /* Barra de arriba: si no entra en una línea (celular), se desliza sola */
 try { (function(){
@@ -2215,9 +2625,14 @@ try { Vapor = (function(){
       cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
   }
+  // con el vape 3D, el vapor sale de la punta real de la boquilla (se mueve al girar y flotar)
+  const off = { x: 0, y: 0, ok: false };
   function medirPico(){
+    const h = hero.getBoundingClientRect(), c3 = Heroe.d3 && Heroe.d3.listo && $('#device3d');
+    off.ok = !!c3;
+    if (c3){ const r = c3.getBoundingClientRect(); off.x = r.left - h.left; off.y = r.top - h.top; return; }
     const d = $('#device'); if (!d) return;
-    const r = d.getBoundingClientRect(), h = hero.getBoundingClientRect();
+    const r = d.getBoundingClientRect();
     pico.x = r.left - h.left + r.width / 2; pico.y = r.top - h.top + r.height * .03;
   }
   function soltar(x, y, o){
@@ -2237,9 +2652,11 @@ try { Vapor = (function(){
     if (!visible || document.hidden) return;
     cuadro++;
     if (cuadro % 20 === 1) medirPico();
+    if (off.ok && Heroe.d3 && Heroe.d3.listo){ pico.x = off.x + Heroe.d3.tip.x; pico.y = off.y + Heroe.d3.tip.y; }
     if (cuadro % 3 === 0) soltar(pico.x + (Math.random() - .5) * 8, pico.y, { up: .55, spread: .35, r: 10, grow: .3, life: 200, alpha: .15 });
     if (now > proxima){
       proxima = now + 2600 + Math.random() * 1800;
+      if (Heroe.d3) Heroe.d3.pitada();
       for (let k = 0; k < 16; k++) soltar(pico.x + (Math.random() - .5) * 14, pico.y - Math.random() * 10, { up: 1.1 + Math.random() * .8, spread: 1.4, r: 14, grow: .55, life: 260, alpha: .18 });
     }
     ctx.clearRect(0, 0, W, H);
@@ -2271,47 +2688,679 @@ try { Vapor = (function(){
   else window.addEventListener('resize', () => { medir(); medirPico(); }, { passive: true });
   if ('IntersectionObserver' in window) new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(hero);
   requestAnimationFrame(loop);
-  return { tint(hex){ tinte = sprite(hex); }, bocanada(){ proxima = 0; } };
+  return { tint(hex){ tinte = sprite(hex); }, bocanada(){ proxima = 0; }, remedir: medirPico };
 })(); } catch (err) { console.warn(err); Vapor = null; }
 
-/* El dispositivo del hero va pasando por los sabores del catálogo */
+/* El dispositivo del hero va pasando por los sabores del catálogo.
+   En cada cambio: colores, pantalla, nombre, foto, precio y vapor. Con las flechas se elige a mano. */
 try { (function(){
   const hero = $('#hero'), stage = $('#heroStage'), btn = $('#nowFlavor'), led = $('#devLed'), dev = $('#device');
   if (!hero || !stage) return;
   const lista = PRODUCTOS.filter(p => !p.agotado);
   if (!lista.length){ stage.hidden = true; return; }
-  let k = 0, pausa = false;
-  function mostrar(i){
-    const p = lista[i], c = paleta(p);
+  const img = $('#nowImg'), precio = $('#nowPrice'), barra = $('#nowBar');
+  const DUR = 4000;            // tiempo de cada sabor (ms)
+  let k = 0, pausa = false, enVista = true, corrido = 0;
+  const catCorta = p => nomCat(p.categoria).replace(/^lost\s*mary\s*/i, '').trim();
+  function pintarBarra(suave){
+    if (!barra) return;
+    barra.style.transition = suave ? 'transform .25s linear' : 'none';
+    barra.style.transform = `scaleX(${Math.min(1, corrido / DUR)})`;
+  }
+  function mostrar(i, dir){
+    const p = lista[i], c = paleta(p), pf = puffs(p);
     hero.style.setProperty('--ha', c.a);
     hero.style.setProperty('--hb', c.b);
-    led.textContent = puffs(p);
+    led.textContent = pf;
     $('#nowName').textContent = sabor(p);
-    $('#nowCat').textContent = nomCat(p.categoria);
+    $('#nowCat').textContent = catCorta(p) || nomCat(p.categoria);
+    if (precio) precio.textContent = plata(p.precio);
+    if (img) img.src = imgs(p)[0];
     btn.dataset.id = p.id;
     btn.setAttribute('aria-label', `Ver ${p.nombre}`);
     btn.classList.remove('swap'); void btn.offsetWidth; btn.classList.add('swap');
     if (Vapor) Vapor.tint(c.b);
+    // datos para el vape 3D (pantalla, calco y colores)
+    const modo = catCorta(p).toUpperCase();
+    Heroe.actual = { a: c.a, b: c.b, puffs: pf, nombre: sabor(p), modo: modo === pf ? '' : (modo.length > 6 ? modo.slice(0, 5) : modo) };
+    if (Heroe.d3) Heroe.d3.sabor(Heroe.actual, dir || 1);
+    corrido = 0; pintarBarra(false);
   }
+  function pasar(dir){ k = (k + dir + lista.length) % lista.length; mostrar(k, dir); }
   mostrar(0);
   if (!sinMovimiento) setInterval(() => {
-    if (pausa || document.hidden) return;
-    k = (k + 1) % lista.length; mostrar(k);
-  }, 3800);
+    if (pausa || !enVista || document.hidden) return;
+    corrido += 250; pintarBarra(true);
+    if (corrido >= DUR) pasar(1);
+  }, 250);
+  if ('IntersectionObserver' in window) new IntersectionObserver(es => { enVista = es[0].isIntersecting; }).observe(hero);
   stage.addEventListener('pointerenter', () => { pausa = true; });
   stage.addEventListener('pointerleave', () => { pausa = false; });
   btn.addEventListener('click', () => abrirFicha(btn.dataset.id));
-  dev.addEventListener('click', () => { k = (k + 1) % lista.length; mostrar(k); if (Vapor) Vapor.bocanada(); });
+  dev.addEventListener('click', () => { pasar(1); if (Vapor) Vapor.bocanada(); });
+  const prev = $('#nowPrev'), next = $('#nowNext');
+  if (prev) prev.addEventListener('click', () => { pasar(-1); if (Vapor) Vapor.bocanada(); });
+  if (next) next.addEventListener('click', () => { pasar(1); if (Vapor) Vapor.bocanada(); });
+  stage.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft'){ e.preventDefault(); pasar(-1); }
+    else if (e.key === 'ArrowRight'){ e.preventDefault(); pasar(1); }
+  });
 })(); } catch (err) { console.warn(err); }
 
-/* Al agregar al carrito, el sabor vuela hasta el ícono */
+/* Vape 3D del hero: carga three.js y cambia el dibujo por un modelo 3D realista
+   (cuerpo brillante con el degradé del sabor, aro cromado, boquilla, pantalla LED).
+   Gira solo, da una vuelta en cada cambio de sabor y se puede girar arrastrándolo.
+   Si el navegador no tiene 3D o no hay internet, queda el dibujo de siempre. */
+try { (function(){
+  const dev = $('#device'), cv = $('#device3d');
+  if (!dev || !cv || !window.WebGLRenderingContext) return;
+
+  function crearVape3D(THREE, canvas, op){
+    op = op || {};
+    const quieto = !!op.quieto;
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(24, 1, 2, 20);
+    camera.position.set(0, 0.9, 7.1);
+    camera.lookAt(0, 0.02, 0);
+
+    /* ---------- Geometría: "losa" redondeada ----------
+       Contorno de frente = rectángulo con esquinas de radio Rc; cantos de perfil con radio Re.
+       Normales exactas (sin facetas). */
+    function losa(W, H, D, Rc, Re, segC, segE){
+      segC = segC || 12; segE = segE || 10;
+      Re = Math.min(Re, D / 2, W / 2, H / 2);
+      Rc = Math.min(Math.max(Rc, Re), W / 2, H / 2);
+      const ax = W / 2 - Re, ay = H / 2 - Re, rc = Rc - Re, zi = D / 2 - Re;
+      const cx = ax - rc, cy = ay - rc, ring = [];
+      [[cx, cy], [-cx, cy], [-cx, -cy], [cx, -cy]].forEach(([x0, y0], k) => {
+        for (let i = 0; i <= segC; i++){
+          const a = (k + i / segC) * Math.PI / 2, nx = Math.cos(a), ny = Math.sin(a);
+          ring.push([x0 + rc * nx, y0 + rc * ny, nx, ny]);
+        }
+      });
+      const N = ring.length, pos = [], nor = [], idx = [], loops = [], perfil = [];
+      for (let i = 0; i <= segE; i++){ const f = -Math.PI / 2 + i / segE * Math.PI / 2; perfil.push([Math.cos(f), Math.sin(f), -zi]); }
+      for (let i = 0; i <= segE; i++){ const f = i / segE * Math.PI / 2; perfil.push([Math.cos(f), Math.sin(f), zi]); }
+      for (const [c, s, z0] of perfil){
+        loops.push(pos.length / 3);
+        for (const [x, y, nx, ny] of ring){
+          pos.push(x + Re * c * nx, y + Re * c * ny, z0 + Re * s);
+          nor.push(c * nx, c * ny, s);
+        }
+      }
+      for (let l = 0; l < loops.length - 1; l++){
+        const a = loops[l], b = loops[l + 1];
+        for (let i = 0; i < N; i++){ const j = (i + 1) % N; idx.push(a + i, a + j, b + j, a + i, b + j, b + i); }
+      }
+      const tapa = (loop, z, nz) => {
+        const c = pos.length / 3; pos.push(0, 0, z); nor.push(0, 0, nz);
+        for (let i = 0; i < N; i++){ const j = (i + 1) % N; if (nz > 0) idx.push(c, loop + i, loop + j); else idx.push(c, loop + j, loop + i); }
+      };
+      tapa(loops[loops.length - 1], D / 2, 1);
+      tapa(loops[0], -D / 2, -1);
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+      g.setIndex(idx);
+      return g;
+    }
+    // angosta la pieza hacia arriba (boquilla), corrigiendo normales
+    function afinar(g, kx, kz){
+      g.computeBoundingBox();
+      const y0 = g.boundingBox.min.y, h = g.boundingBox.max.y - y0;
+      const P = g.attributes.position, Nn = g.attributes.normal;
+      for (let i = 0; i < P.count; i++){
+        const x = P.getX(i), y = P.getY(i), z = P.getZ(i), t = (y - y0) / h;
+        const sx = 1 - kx * t, sz = 1 - kz * t, dx = -kx / h, dz = -kz / h;
+        P.setXYZ(i, x * sx, y, z * sz);
+        const nx = Nn.getX(i), ny = Nn.getY(i), nz = Nn.getZ(i);
+        const mx = nx / sx, mz = nz / sz, my = ny - dx * x * nx / sx - dz * z * nz / sz, L = Math.hypot(mx, my, mz) || 1;
+        Nn.setXYZ(i, mx / L, my / L, mz / L);
+      }
+      P.needsUpdate = Nn.needsUpdate = true;
+    }
+    function placaRedonda(w, h, r){
+      const s = new THREE.Shape(), x = w / 2 - r, y = h / 2 - r;
+      s.moveTo(-x, -h / 2); s.lineTo(x, -h / 2); s.absarc(x, -y, r, -Math.PI / 2, 0, false);
+      s.lineTo(w / 2, y); s.absarc(x, y, r, 0, Math.PI / 2, false);
+      s.lineTo(-x, h / 2); s.absarc(-x, y, r, Math.PI / 2, Math.PI, false);
+      s.lineTo(-w / 2, -y); s.absarc(-x, -y, r, Math.PI, Math.PI * 1.5, false);
+      const g = new THREE.ShapeGeometry(s, 10), uv = g.attributes.uv, p = g.attributes.position;
+      for (let i = 0; i < uv.count; i++) uv.setXY(i, p.getX(i) / w + .5, p.getY(i) / h + .5);
+      return g;
+    }
+
+    /* ---------- Entorno de estudio: da los reflejos realistas ---------- */
+    (function(){
+      const s = new THREE.Scene(), geo = new THREE.BoxGeometry(1, 1, 1);
+      const sala = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: 0x100c18, side: THREE.BackSide }));
+      sala.scale.setScalar(16); s.add(sala);
+      const luz = (k, sx, sy, sz, x, y, z) => {
+        const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial()); m.material.color.setScalar(k);
+        m.scale.set(sx, sy, sz); m.position.set(x, y, z); m.lookAt(0, 0, 0); s.add(m);
+      };
+      luz(9, 5, 1.6, .1, 0, 6.5, 1.2);       // techo
+      luz(8, 1.2, 8, .1, -6.5, 0.6, 2.4);    // tira izquierda
+      luz(5, .9, 8, .1, 6.5, 0.4, -2.2);     // tira derecha, atrás
+      luz(1.5, 4.6, 1.5, .1, 0, 2.8, 7);     // relleno de frente, arriba de la cámara
+      const brillo = new THREE.Mesh(geo, new THREE.MeshBasicMaterial()); brillo.material.color.setScalar(6);
+      brillo.scale.set(.22, 7, .1); brillo.position.set(-1.6, 1.2, 6.6); brillo.lookAt(0, 0, 0); brillo.rotateZ(-.6); s.add(brillo);
+      luz(1.2, 6, .8, .1, 0, -6.5, 1.5);     // piso
+      const pm = new THREE.PMREMGenerator(renderer);
+      scene.environment = pm.fromScene(s, 0.03).texture;
+      pm.dispose(); geo.dispose();
+      s.traverse(o => { if (o.material) o.material.dispose(); });
+    })();
+
+    /* ---------- Luces: principal blanca + contraluces del color del sabor ---------- */
+    const luzKey = new THREE.DirectionalLight(0xffffff, 1.1); luzKey.position.set(-2.5, 3.5, 4); scene.add(luzKey);
+    const rimA = new THREE.DirectionalLight(0xffffff, 2.6); rimA.position.set(-4, 1.6, -3.4); scene.add(rimA);
+    const rimB = new THREE.DirectionalLight(0xffffff, 2.2); rimB.position.set(4, -0.4, -3.2); scene.add(rimB);
+
+    /* ---------- Colores (en espacio lineal) ---------- */
+    const lin = hex => new THREE.Color(hex).convertSRGBToLinear();
+    const U = { top: { value: lin('#3FD8FF') }, mid: { value: lin('#2F6BFF') }, bot: { value: lin('#1a1446') } };
+    const meta = { top: U.top.value.clone(), mid: U.mid.value.clone(), bot: U.bot.value.clone(), boq: lin('#14101c'), rimA: lin('#3FD8FF'), rimB: lin('#2F6BFF'), led: lin('#3FD8FF'), halo: lin('#3F9BFF') };
+
+    /* ---------- Materiales ---------- */
+    const matCuerpo = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: .12, roughness: .3, clearcoat: 1, clearcoatRoughness: .06 });
+    matCuerpo.onBeforeCompile = sh => {
+      sh.uniforms.uTop = U.top; sh.uniforms.uMid = U.mid; sh.uniforms.uBot = U.bot;
+      sh.vertexShader = 'varying float vGy;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  vGy = position.y;');
+      sh.fragmentShader = 'uniform vec3 uTop;\nuniform vec3 uMid;\nuniform vec3 uBot;\nvarying float vGy;\n' + sh.fragmentShader.replace(
+        'vec4 diffuseColor = vec4( diffuse, opacity );',
+        'float gh = clamp((vGy + 0.9) / 1.8, 0.0, 1.0);\n' +
+        '  vec3 gc = gh < 0.45 ? mix(uBot, uMid, smoothstep(0.0, 0.45, gh)) : mix(uMid, uTop, smoothstep(0.45, 1.0, gh));\n' +
+        '  vec4 diffuseColor = vec4( gc, opacity );');
+    };
+    const matBoq = new THREE.MeshPhysicalMaterial({ color: 0x0c0912, metalness: .05, roughness: .46, clearcoat: .35, clearcoatRoughness: .35 });
+    const matCromo = new THREE.MeshStandardMaterial({ color: 0xeceaf3, metalness: 1, roughness: .13 });
+    const matMarco = new THREE.MeshPhysicalMaterial({ color: 0x050308, metalness: .3, roughness: .32, clearcoat: 1, clearcoatRoughness: .04 });
+    const matOscuro = new THREE.MeshBasicMaterial({ color: 0x020104 });
+    const matGris = new THREE.MeshStandardMaterial({ color: 0x2b2535, metalness: .85, roughness: .3 });
+    const matLed = new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false });
+
+    /* ---------- Pantalla (textura dibujada) ---------- */
+    const PW = 384, PH = 480;
+    const pc = document.createElement('canvas'); pc.width = PW; pc.height = PH;
+    const px = pc.getContext('2d');
+    const ptex = new THREE.CanvasTexture(pc); ptex.encoding = THREE.sRGBEncoding; ptex.anisotropy = 4;
+    const matPantalla = new THREE.MeshPhysicalMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: ptex, emissiveIntensity: 1.25, metalness: 0, roughness: .08, clearcoat: 1, clearcoatRoughness: .02 });
+
+    /* ---------- Calcos: sabor al frente, marca al costado ---------- */
+    const dc = document.createElement('canvas'); dc.width = 512; dc.height = 256;
+    const dx = dc.getContext('2d');
+    const dtex = new THREE.CanvasTexture(dc); dtex.encoding = THREE.sRGBEncoding; dtex.anisotropy = 4;
+    const matCalco = new THREE.MeshPhysicalMaterial({ map: dtex, transparent: true, metalness: 0, roughness: .32, clearcoat: 1, clearcoatRoughness: .06, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 });
+    const bc = document.createElement('canvas'); bc.width = 512; bc.height = 320;
+    const bx = bc.getContext('2d');
+    const btex = new THREE.CanvasTexture(bc); btex.encoding = THREE.sRGBEncoding; btex.anisotropy = 4;
+    const matDorso = new THREE.MeshPhysicalMaterial({ map: btex, transparent: true, metalness: 0, roughness: .32, clearcoat: 1, clearcoatRoughness: .06, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 });
+    const mc = document.createElement('canvas'); mc.width = 512; mc.height = 96;
+    const mx = mc.getContext('2d');
+    const mtex = new THREE.CanvasTexture(mc); mtex.encoding = THREE.sRGBEncoding; mtex.anisotropy = 4;
+    const matMarca = new THREE.MeshPhysicalMaterial({ map: mtex, transparent: true, metalness: 0, roughness: .32, clearcoat: 1, clearcoatRoughness: .06, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 });
+
+    /* ---------- Armado ---------- */
+    const raiz = new THREE.Group(); raiz.rotation.order = 'ZXY'; scene.add(raiz);
+    const disp = new THREE.Group(); disp.position.y = -0.22; raiz.add(disp);
+    const malla = (g, m, x, y, z) => { const o = new THREE.Mesh(g, m); o.position.set(x || 0, y || 0, z || 0); disp.add(o); return o; };
+
+    // cuerpo: 1.0 x 1.8 x 0.56
+    malla(losa(1.0, 1.8, 0.56, 0.24, 0.17, 14, 12), matCuerpo);
+    // aro cromado
+    const gAro = losa(0.62, 0.3, 0.07, 0.15, 0.03, 12, 5); gAro.rotateX(-Math.PI / 2);
+    malla(gAro, matCromo, 0, 0.92);
+    // boquilla (más angosta y chata arriba)
+    const gBoq = losa(0.54, 0.26, 0.4, 0.13, 0.07, 12, 8); gBoq.rotateX(-Math.PI / 2); afinar(gBoq, .16, .3);
+    malla(gBoq, matBoq, 0, 1.145);
+    const gAg = placaRedonda(0.17, 0.045, 0.0225); gAg.rotateX(-Math.PI / 2);
+    malla(gAg, matOscuro, 0, 1.3465);
+    // marco de la pantalla + vidrio
+    malla(losa(0.6, 0.74, 0.03, 0.09, 0.012, 10, 4), matMarco, 0, 0.3, 0.287);
+    malla(placaRedonda(0.54, 0.68, 0.06), matPantalla, 0, 0.3, 0.3036);
+    // calco con el sabor
+    malla(new THREE.PlaneGeometry(0.62, 0.31), matCalco, 0, -0.33, 0.2812);
+    // dorso: marca y datos
+    const gDorso = new THREE.PlaneGeometry(0.62, 0.3875); gDorso.rotateY(Math.PI);
+    malla(gDorso, matDorso, 0, -0.18, -0.2812);
+    // tira de luz
+    malla(losa(0.24, 0.022, 0.012, 0.011, 0.004, 6, 2), matLed, 0, -0.64, 0.281);
+    // marca al costado derecho
+    const gMarca = new THREE.PlaneGeometry(0.86, 0.16); gMarca.rotateZ(Math.PI / 2); gMarca.rotateY(Math.PI / 2);
+    malla(gMarca, matMarca, 0.5012, -0.12, 0);
+    // perilla de aire al costado izquierdo
+    const gPer = losa(0.12, 0.24, 0.03, 0.06, 0.01, 8, 3); gPer.rotateY(-Math.PI / 2);
+    malla(gPer, matGris, -0.507, 0.22, 0);
+
+    // reflejo de luz en el "piso" (se agranda y apaga cuando el aparato sube)
+    const hc = document.createElement('canvas'); hc.width = hc.height = 128;
+    const hx = hc.getContext('2d'), hg = hx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    hg.addColorStop(0, 'rgba(255,255,255,1)'); hg.addColorStop(.35, 'rgba(255,255,255,.38)'); hg.addColorStop(1, 'rgba(255,255,255,0)');
+    hx.fillStyle = hg; hx.fillRect(0, 0, 128, 128);
+    const htex = new THREE.CanvasTexture(hc);
+    const matHalo = new THREE.MeshBasicMaterial({ map: htex, color: 0xffffff, transparent: true, opacity: .5, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+    const halo = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 1.05), matHalo);
+    halo.rotation.x = -Math.PI / 2; halo.position.y = -1.3; scene.add(halo);
+
+    /* ---------- Dibujo de pantalla y calcos ---------- */
+    const est = { puffs: '35K', modo: 'ULTRASONIC', nombre: 'Blue Razz Ice', a: '#2F6BFF', b: '#3FD8FF' };
+    const encendido = { t0: -1 };
+    function rr(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+    function pintarPantalla(k){
+      // k: 0..1 progreso del encendido (1 = quieto)
+      const c = px, b = est.b;
+      c.globalAlpha = 1; c.shadowBlur = 0;
+      c.fillStyle = '#000'; c.fillRect(0, 0, PW, PH);
+      // matriz de puntos tenue
+      c.fillStyle = 'rgba(255,255,255,.035)';
+      for (let y = 6; y < PH; y += 10) for (let x = 6; x < PW; x += 10) c.fillRect(x, y, 3, 3);
+      const ap = Math.min(1, Math.max(0, (k - .05) / .2));   // aparece
+      c.globalAlpha = ap;
+      // batería
+      c.strokeStyle = 'rgba(255,255,255,.88)'; c.lineWidth = 5;
+      rr(c, 34, 36, 78, 36, 8); c.stroke();
+      c.fillStyle = 'rgba(255,255,255,.88)'; c.fillRect(114, 47, 7, 14);
+      const barras = Math.round(4 * Math.min(1, Math.max(0, (k - .15) / .5)));
+      c.fillStyle = b;
+      for (let i = 0; i < 4; i++){ c.globalAlpha = ap * (i < barras ? 1 : .14); c.fillRect(42 + i * 17, 43, 13, 22); }
+      c.globalAlpha = ap;
+      c.font = '800 24px Manrope, system-ui, sans-serif'; c.textBaseline = 'middle'; c.textAlign = 'left';
+      const pct = Math.round(100 * Math.min(1, k * 1.25)) + '%';
+      c.fillStyle = 'rgba(255,255,255,.9)'; c.fillText(pct, 134, 55);
+      // modo (solo si entra al lado de la batería)
+      if (est.modo){
+        const libre = PW - 34 - (134 + c.measureText('100%').width + 18);
+        let f = 22; c.font = `800 ${f}px Manrope, system-ui, sans-serif`;
+        while (c.measureText(est.modo).width + 26 > libre && f > 14){ f--; c.font = `800 ${f}px Manrope, system-ui, sans-serif`; }
+        const tw = c.measureText(est.modo).width;
+        if (tw + 26 <= libre){
+          c.textAlign = 'right';
+          c.fillStyle = b; rr(c, PW - 34 - tw - 26, 37, tw + 26, 36, 18); c.fill();
+          c.fillStyle = '#05030a'; c.fillText(est.modo, PW - 47, 56);
+        }
+      }
+      // número grande
+      const num = parseInt(est.puffs, 10) || 0, suf = String(est.puffs).replace(/^\d+/, '');
+      const cuenta = Math.round(num * Math.min(1, Math.max(0, (k - .12) / .6)));
+      const txt = String(cuenta).padStart(String(num).length, '0') + suf;
+      c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+      let fs = 168; c.font = `900 ${fs}px Doto, monospace`;
+      while (c.measureText(txt).width > PW - 40 && fs > 60){ fs -= 6; c.font = `900 ${fs}px Doto, monospace`; }
+      c.shadowColor = b; c.shadowBlur = 34; c.fillStyle = b;
+      c.fillText(txt, PW / 2, 270);
+      c.shadowBlur = 10; c.fillStyle = '#fff'; c.globalAlpha = ap * .92;
+      c.fillText(txt, PW / 2, 270);
+      c.shadowBlur = 0; c.globalAlpha = ap;
+      c.font = '800 26px Manrope, system-ui, sans-serif'; c.fillStyle = b;
+      c.save(); c.translate(PW / 2, 318); c.fillText('P U F F S', 0, 0); c.restore();
+      // nivel de líquido
+      c.strokeStyle = 'rgba(255,255,255,.88)'; c.lineWidth = 4.5;
+      c.beginPath(); c.moveTo(52, 380); c.bezierCurveTo(40, 398, 34, 408, 34, 418); c.arc(52, 418, 18, Math.PI, 0, true); c.bezierCurveTo(70, 408, 64, 398, 52, 380); c.stroke();
+      const seg = 10, llenos = Math.round(seg * Math.min(1, Math.max(0, (k - .2) / .65)));
+      for (let i = 0; i < seg; i++){
+        c.globalAlpha = ap * (i < llenos ? 1 : .14);
+        const g = c.createLinearGradient(86, 0, PW - 34, 0); g.addColorStop(0, est.a); g.addColorStop(1, b);
+        c.fillStyle = g; rr(c, 88 + i * 26.4, 398, 20, 34, 5); c.fill();
+      }
+      c.globalAlpha = 1;
+      ptex.needsUpdate = true;
+    }
+    function partir(t){
+      const p = String(t).toUpperCase().split(/\s+/);
+      if (p.length < 2) return [p.join(' ')];
+      let mejor = null;
+      for (let i = 1; i < p.length; i++){
+        const a = p.slice(0, i).join(' '), z = p.slice(i).join(' '), d = Math.abs(a.length - z.length);
+        if (!mejor || d < mejor.d) mejor = { a, z, d };
+      }
+      return [mejor.a, mejor.z];
+    }
+    function pintarCalcos(){
+      const c = dx, W = 512, H = 256;
+      c.clearRect(0, 0, W, H);
+      const lineas = partir(est.nombre);
+      c.textAlign = 'center'; c.textBaseline = 'alphabetic'; c.fillStyle = '#fff';
+      let fs = 64; c.font = `800 ${fs}px Unbounded, 'Arial Black', sans-serif`;
+      const ancho = () => Math.max(...lineas.map(l => c.measureText(l).width));
+      while (ancho() > W - 40 && fs > 26){ fs -= 2; c.font = `800 ${fs}px Unbounded, 'Arial Black', sans-serif`; }
+      const alto = fs * 1.06, y0 = H / 2 - (lineas.length * alto) / 2 + fs * .82 - 14;
+      lineas.forEach((l, i) => c.fillText(l, W / 2, y0 + i * alto));
+      c.globalAlpha = .82; c.font = '800 27px Manrope, system-ui, sans-serif';
+      if ('letterSpacing' in c) c.letterSpacing = '4px';
+      const y1 = y0 + (lineas.length - 1) * alto + 50;
+      c.fillText(est.puffs ? (parseInt(est.puffs, 10) * 1000).toLocaleString('es-UY') + ' PUFFS' : '', W / 2, y1);
+      c.globalAlpha = 1; if ('letterSpacing' in c) c.letterSpacing = '0px';
+      dtex.needsUpdate = true;
+      // marca
+      mx.clearRect(0, 0, 512, 96);
+      mx.fillStyle = 'rgba(255,255,255,.92)'; mx.textAlign = 'center'; mx.textBaseline = 'middle';
+      mx.font = "800 46px Unbounded, 'Arial Black', sans-serif";
+      if ('letterSpacing' in mx) mx.letterSpacing = '10px';
+      mx.fillText('VPVAPES', 256, 50);
+      mtex.needsUpdate = true;
+      // dorso
+      bx.clearRect(0, 0, 512, 320);
+      bx.textAlign = 'center'; bx.textBaseline = 'alphabetic'; bx.fillStyle = 'rgba(255,255,255,.9)';
+      bx.font = "800 58px Unbounded, 'Arial Black', sans-serif";
+      if ('letterSpacing' in bx) bx.letterSpacing = '6px';
+      bx.fillText('VPVAPES', 256, 120);
+      bx.fillStyle = 'rgba(255,255,255,.6)'; bx.fillRect(176, 150, 160, 3);
+      bx.font = '800 25px Manrope, system-ui, sans-serif';
+      if ('letterSpacing' in bx) bx.letterSpacing = '5px';
+      bx.fillStyle = 'rgba(255,255,255,.8)';
+      bx.fillText('MESH COIL  ·  USB-C', 256, 205);
+      bx.fillText(String(est.nombre).toUpperCase(), 256, 250);
+      if ('letterSpacing' in bx) bx.letterSpacing = '0px';
+      btex.needsUpdate = true;
+    }
+
+    /* ---------- Estado de animación ---------- */
+    const cv = { yaw: 0, vel: 0, obj: 0 };          // giro de cambio de sabor (resorte)
+    const user = { yaw: 0, pitch: 0, vy: 0, toque: -1e9, activo: false };
+    let pulso = 0, t = 0, ultimo = performance.now(), visible = true, raf = 0, listo = false;
+    let pendiente = null;
+    const tip = { x: 0, y: 0 }, vTip = new THREE.Vector3();
+    const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    // sin movimiento (accesibilidad): solo se dibuja cuando algo cambia
+    let activoHasta = performance.now() + 3000;
+    const avivar = ms => { activoHasta = Math.max(activoHasta, performance.now() + ms); };
+
+    function aplicar(d){
+      Object.assign(est, d);
+      meta.top.copy(lin(d.b)); meta.mid.copy(lin(d.a));
+      meta.bot.copy(lin(d.a)).lerp(lin('#120826'), .55);
+      meta.boq.copy(lin(d.a)).lerp(lin('#06040a'), .93);
+      meta.rimA.copy(lin(d.b)); meta.rimB.copy(lin(d.a)); meta.led.copy(lin(d.b)); meta.halo.copy(lin(d.a)).lerp(lin(d.b), .4);
+      encendido.t0 = performance.now();
+      pintarCalcos();
+      avivar(2500);
+    }
+
+    function medir(){
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      // encuadre: el alto visible acompaña el alto del lienzo
+      const vis = op.altoVisible || 3.05;
+      camera.position.z = vis / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+      camera.position.y = 0.9 * camera.position.z / 7.1;
+      camera.lookAt(0, 0.02, 0);
+      camera.updateProjectionMatrix();
+      avivar(400);
+    }
+
+    const muestras = [];
+    function calidad(ms){
+      muestras.push(ms);
+      if (muestras.length < 70) return;
+      const m = muestras.slice().sort((a, b) => a - b)[35];
+      if (m > 26 && renderer.getPixelRatio() > 1){ renderer.setPixelRatio(1); medir(); muestras.length = 0; return; }
+      muestras.length = 0; muestrasFin = true;
+    }
+    let muestrasFin = false;
+    function cuadro(ahora){
+      raf = requestAnimationFrame(cuadro);
+      if (!visible || document.hidden){ ultimo = ahora; return; }
+      const ms = ahora - ultimo;
+      if (!muestrasFin && listo && ms < 400) calidad(ms);
+      const dt = Math.min(.05, ms / 1000); ultimo = ahora;
+      if (quieto && listo && !user.activo && ahora > activoHasta) return;
+      t += dt;
+      // giro de cambio de sabor: resorte críticamente amortiguado
+      const w = 6.2;
+      cv.vel += (w * w * (cv.obj - cv.yaw) - 2 * w * cv.vel) * dt; cv.yaw += cv.vel * dt;
+      if (pendiente && Math.abs(cv.obj - cv.yaw) < Math.PI * 1.32){ aplicar(pendiente); pendiente = null; }
+      // arrastre con inercia y vuelta suave a la pose
+      if (!user.activo){
+        user.yaw += user.vy * dt; user.vy *= Math.exp(-dt * 3.2);
+        if (ahora - user.toque > 1500){
+          user.yaw = Math.atan2(Math.sin(user.yaw), Math.cos(user.yaw));   // vuelve por el camino corto
+          user.yaw *= Math.exp(-dt * 1.4); user.pitch *= Math.exp(-dt * 2);
+        }
+      }
+      const yaw = (quieto ? -0.42 : -0.36 + 0.3 * Math.sin(t * .55)) + cv.yaw + user.yaw;
+      const pitch = (quieto ? .05 : .045 + .03 * Math.sin(t * .8 + 1)) + user.pitch;
+      const roll = quieto ? -.02 : -.022 + .018 * Math.sin(t * .7 + 2);
+      raiz.rotation.set(pitch, yaw, roll);
+      const fl = quieto ? 0 : .05 * Math.sin(t * 1.05);
+      raiz.position.y = fl;
+      halo.scale.setScalar(1 + fl * 1.6); matHalo.opacity = .42 - fl * 1.8 + pulso * .25;
+      // colores
+      const kc = 1 - Math.exp(-dt * 6.5);
+      U.top.value.lerp(meta.top, kc); U.mid.value.lerp(meta.mid, kc); U.bot.value.lerp(meta.bot, kc);
+      matBoq.color.lerp(meta.boq, kc); matHalo.color.lerp(meta.halo, kc);
+      rimA.color.lerp(meta.rimA, kc); rimB.color.lerp(meta.rimB, kc);
+      // pantalla: encendido y pulso al pitar
+      pulso *= Math.exp(-dt * 2.6);
+      if (encendido.t0 >= 0){
+        const k = Math.min(1, (ahora - encendido.t0) / 950);
+        pintarPantalla(ease(k));
+        if (k >= 1) encendido.t0 = -1;
+      }
+      matPantalla.emissiveIntensity = 1.2 + pulso * .5;
+      matLed.color.copy(meta.led).multiplyScalar(1.1 + pulso * 2.4);
+      renderer.render(scene, camera);
+      // punta de la boquilla en pantalla (para el vapor)
+      vTip.set(0, 1.36, 0); disp.localToWorld(vTip); vTip.project(camera);
+      tip.x = (vTip.x + 1) / 2 * canvas.clientWidth; tip.y = (1 - vTip.y) / 2 * canvas.clientHeight;
+      if (!listo){ listo = true; if (op.alListo) op.alListo(); }
+    }
+
+    medir();
+    if ('ResizeObserver' in window) new ResizeObserver(medir).observe(canvas);
+    else window.addEventListener('resize', medir);
+    pintarPantalla(1); pintarCalcos();
+    if (document.fonts && document.fonts.load){
+      Promise.all(['900 100px Doto', '800 30px Manrope', '800 40px Unbounded'].map(f => document.fonts.load(f).catch(() => null)))
+        .then(() => { pintarCalcos(); if (encendido.t0 < 0) pintarPantalla(1); avivar(400); });
+    }
+    raf = requestAnimationFrame(cuadro);
+
+    return {
+      tip,
+      get listo(){ return listo; },
+      sabor(d, dir){
+        if (quieto || !listo){ aplicar(d); return; }
+        cv.obj += (dir < 0 ? -1 : 1) * Math.PI * 2;
+        pendiente = d;
+        if (Math.abs(cv.obj) > 60){ const m = Math.round(cv.obj / (Math.PI * 2)) * Math.PI * 2; cv.obj -= m; cv.yaw -= m; }
+      },
+      pitada(){ pulso = 1; avivar(2500); },
+      empezarArrastre(){ user.activo = true; user.vy = 0; user.toque = performance.now(); avivar(1000); },
+      arrastrar(dxp, dyp, dtms){
+        const r = 0.012;
+        user.yaw += dxp * r; user.pitch = Math.max(-.5, Math.min(.5, user.pitch + dyp * r * .6));
+        if (dtms > 0) user.vy = user.vy * .5 + (dxp * r / (dtms / 1000)) * .5;
+        user.toque = performance.now(); avivar(6500);
+      },
+      soltar(){ user.activo = false; user.toque = performance.now(); avivar(6500); },
+      visible(v){ visible = v; if (v) avivar(400); },
+      pose(y, p){ cv.yaw = cv.obj = y || 0; user.pitch = p || 0; avivar(400); },   // para pruebas
+      estado(){ return { yaw: cv.yaw, obj: cv.obj, vel: cv.vel, user: user.yaw, t, pr: renderer.getPixelRatio() }; },
+      destruir(){ cancelAnimationFrame(raf); renderer.dispose(); }
+    };
+  }
+
+  /* Aviso "arrastralo para girarlo" (se muestra una vez) */
+  const aviso = $('#giroHint'), avisoTxt = $('#giroTxt');
+  let avisoFin = false;
+  function mostrarAviso(){
+    if (!aviso) return;
+    try { if (localStorage.getItem('vp-giro')) return; } catch (_) {}
+    if (avisoTxt && window.matchMedia && matchMedia('(hover: none)').matches) avisoTxt.textContent = 'Deslizalo para girarlo';
+    setTimeout(() => {
+      if (avisoFin) return;
+      aviso.hidden = false; void aviso.offsetWidth; aviso.classList.add('on');
+      setTimeout(() => ocultarAviso(false), 6000);
+    }, 1400);
+  }
+  function ocultarAviso(guardar){
+    avisoFin = true;
+    if (aviso) aviso.classList.remove('on');
+    if (guardar) try { localStorage.setItem('vp-giro', '1'); } catch (_) {}
+  }
+
+  let api = null;
+  function iniciar(){
+    if (api || !window.THREE) return;
+    try {
+      api = crearVape3D(window.THREE, cv, {
+        quieto: sinMovimiento,
+        alListo(){ dev.classList.add('is-3d'); if (Vapor && Vapor.remedir) Vapor.remedir(); mostrarAviso(); }
+      });
+    } catch (e) { console.warn(e); api = null; return; }
+    Heroe.d3 = api;
+    if (Heroe.actual) api.sabor(Heroe.actual);
+
+    // arrastrar para girar (el toque corto sigue pasando de sabor)
+    let id = null, x0 = 0, y0 = 0, lx = 0, ly = 0, lt = 0, movido = false, tragarClick = false;
+    dev.addEventListener('pointerdown', e => {
+      if (!api || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      id = e.pointerId; x0 = lx = e.clientX; y0 = ly = e.clientY; lt = performance.now(); movido = false; tragarClick = false;
+    });
+    dev.addEventListener('pointermove', e => {
+      if (!api || e.pointerId !== id) return;
+      const ahora = performance.now();
+      if (!movido && Math.hypot(e.clientX - x0, e.clientY - y0) > 6){
+        movido = true; api.empezarArrastre(); dev.classList.add('agarrado'); ocultarAviso(true);
+        try { dev.setPointerCapture(id); } catch (_) {}
+      }
+      if (movido) api.arrastrar(e.clientX - lx, e.clientY - ly, ahora - lt);
+      lx = e.clientX; ly = e.clientY; lt = ahora;
+    });
+    const soltar = e => {
+      if (e.pointerId !== id) return;
+      if (movido && api){ api.soltar(); dev.classList.remove('agarrado'); tragarClick = e.type === 'pointerup'; }
+      id = null; movido = false;
+    };
+    dev.addEventListener('pointerup', soltar);
+    dev.addEventListener('pointercancel', soltar);
+    dev.addEventListener('click', e => { if (tragarClick){ tragarClick = false; e.stopImmediatePropagation(); } }, true);
+
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (api) api.visible(es[0].isIntersecting); }).observe(dev);
+    cv.addEventListener('webglcontextlost', e => {
+      e.preventDefault();
+      dev.classList.remove('is-3d', 'agarrado');
+      if (Heroe.d3 === api) Heroe.d3 = null;
+      try { api.destruir(); } catch (_) {}
+      api = null;
+    });
+  }
+
+  const fuentes = [
+    'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+    'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js',
+    'js/three.min.js'
+  ];
+  (function cargar(i){
+    if (window.THREE) return iniciar();
+    if (i >= fuentes.length) return;
+    const s = document.createElement('script');
+    s.src = fuentes[i]; s.async = true;
+    s.onload = iniciar;
+    s.onerror = () => { s.remove(); cargar(i + 1); };
+    document.head.appendChild(s);
+  })(0);
+})(); } catch (err) { console.warn(err); }
+
+/* Cinta de sabores: se arma con los sabores del catálogo, cada uno en su color */
+try { (function(){
+  const track = $('#cinta');
+  if (!track) return;
+  const vistos = new Set(), items = [];
+  PRODUCTOS.forEach(p => {
+    const n = sabor(p), clave = n.toLowerCase();
+    if (!n || vistos.has(clave)) return;
+    vistos.add(clave); items.push(`<li style="--c:${esc(paleta(p).b)}">${esc(n)}</li>`);
+  });
+  if (!items.length){ track.parentNode.hidden = true; return; }
+  const ul = `<ul class="cinta-list">${items.join('')}</ul>`;
+  track.innerHTML = ul + ul;
+  track.style.setProperty('--dur', Math.max(30, items.length * 3.2) + 's');
+})(); } catch (err) { console.warn(err); }
+
+/* Aparición suave de las secciones al bajar */
+try { (function(){
+  if (sinMovimiento || !('IntersectionObserver' in window)) return;
+  const els = $$('.sec-head, .cats, .nuevo, .watch, .feat-head, .pasos, .faq, .banner');
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (en.isIntersecting){ en.target.classList.add('rv-on'); io.unobserve(en.target); }
+  }), { rootMargin: '0px 0px -8% 0px' });
+  els.forEach(el => { el.classList.add('rv'); io.observe(el); });
+})(); } catch (err) { console.warn(err); }
+
+/* Video: se reproduce solo (sin sonido) cuando está en pantalla y se pausa al salir */
+try { (function(){
+  const v = $('#video'), snd = $('#videoSound'), play = $('#videoPlay');
+  if (!v || !snd || !play) return;
+  v.controls = false;
+  v.muted = true;
+  snd.hidden = false;
+  let pausaManual = false;
+  const reproducir = () => {
+    const pr = v.play();
+    if (pr && pr.catch) pr.then(() => { play.hidden = true; }).catch(() => { play.hidden = false; });
+  };
+  play.addEventListener('click', () => { pausaManual = false; play.hidden = true; reproducir(); });
+  v.addEventListener('click', () => {
+    if (v.paused){ pausaManual = false; reproducir(); }
+    else { pausaManual = true; v.pause(); play.hidden = false; }
+  });
+  snd.addEventListener('click', () => {
+    v.muted = !v.muted;
+    snd.classList.toggle('on', !v.muted);
+    snd.setAttribute('aria-label', v.muted ? 'Activar sonido' : 'Silenciar');
+    if (v.paused) reproducir();
+  });
+  if (sinMovimiento){ play.hidden = false; return; }
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(es => es.forEach(en => {
+      if (en.isIntersecting){ if (!pausaManual) reproducir(); }
+      else if (!v.paused) v.pause();
+    }), { threshold: .35 }).observe(v);
+  } else reproducir();
+})(); } catch (err) { console.warn(err); }
+
+/* Barra de carrito en celular: muestra cuánto llevás y abre el carrito */
+try { (function(){
+  const bar = $('#cartbar'), txt = $('#cartbarTxt'), btn = $('#cartbarBtn'), badge = $('#cartCount');
+  if (!bar || !txt || !btn || !badge) return;
+  const actualizar = () => {
+    const u = carrito.reduce((a, i) => a + i.cant, 0), t = carrito.reduce((a, i) => a + i.precio * i.cant, 0);
+    bar.hidden = u === 0;
+    document.body.classList.toggle('con-barra', u > 0);
+    txt.innerHTML = `<strong>${u} ${u === 1 ? 'producto' : 'productos'}</strong>${plata(t)}`;
+  };
+  btn.addEventListener('click', abrirCarrito);
+  new MutationObserver(actualizar).observe(badge, { childList: true, characterData: true, subtree: true });
+  actualizar();
+})(); } catch (err) { console.warn(err); }
+
+/* Al agregar al carrito (ficha o botón +), el sabor vuela hasta el ícono */
 try { (function(){
   if (sinMovimiento || !Element.prototype.animate) return;
   document.addEventListener('click', e => {
+    let g = null, col = null;
     const b = e.target.closest('#addBtn');
-    if (!b || b.disabled || !actual) return;
-    const g = $('.gal-main').getBoundingClientRect(), c = $('#cartBtn').getBoundingClientRect();
-    const col = paleta(actual), orb = document.createElement('div');
+    const q = e.target.closest('[data-add]');
+    if (b && !b.disabled && actual){ g = $('.gal-main').getBoundingClientRect(); col = paleta(actual); }
+    else if (q){
+      const p = PRODUCTOS.find(x => x.id === q.dataset.add);
+      const media = q.closest('.card') && q.closest('.card').querySelector('.card-media');
+      if (!p || p.agotado || !media) return;
+      g = media.getBoundingClientRect(); col = paleta(p);
+    }
+    if (!g) return;
+    const c = $('#cartBtn').getBoundingClientRect(), orb = document.createElement('div');
     const x0 = g.left + g.width / 2, y0 = g.top + g.height / 2;
     orb.className = 'fly';
     orb.style.cssText = `--a:${col.a};--b:${col.b};left:${x0 - 28}px;top:${y0 - 28}px`;
